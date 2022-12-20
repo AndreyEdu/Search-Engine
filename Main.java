@@ -11,9 +11,6 @@ public class Main {
         for (int i = 0; i < input.length; i++) {
             if (input[i].equals(find)) {
                 countWord = i + 1;
-
-
-
             }
         }
         if (countWord == 0) {
