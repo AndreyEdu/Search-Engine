@@ -9,6 +9,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         int numberOfPeople = Integer.parseInt(scanner.nextLine());
         String[] dataOfPeople = new String[numberOfPeople];
+        boolean run = true;
 
         System.out.println("Enter all people:");
 
@@ -16,18 +17,33 @@ public class Main {
             dataOfPeople[i] = scanner.nextLine();
         }
 
-        System.out.println("Enter the number of search queries:");
-        int numberOfSearch = scanner.nextInt();
-
         do {
-            System.out.println("Enter data to search people:");
+            System.out.println("""
+                === Menu ===
+                1. Find a person
+                2. Print all people
+                0. Exit
+                    """);
 
-            String searchData = scanner.next();
-            searchPeople(searchData, dataOfPeople);
+            int chooseMenu = Integer.parseInt(scanner.nextLine());
 
-            numberOfSearch--;
-
-        } while (numberOfSearch != 0);
+            switch (chooseMenu) {
+                case 1:
+                    System.out.println("Enter a name or email to search all suitable people.");
+                    String searchData = scanner.nextLine();
+                    searchPeople(searchData, dataOfPeople);
+                    break;
+                case 2:
+                    printAllPeople(dataOfPeople);
+                    break;
+                case 0:
+                    run = false;
+                    System.out.println("Bye!");
+                    break;
+                default:
+                    System.out.println("Incorrect option! Try again.");
+            }
+        } while (run);
     }
 
     protected static void searchPeople(String searchData, String[] dataOfPeople) {
@@ -41,6 +57,13 @@ public class Main {
 
         if (noMatch == 0) {
             System.out.println("No matching people found.");
+        }
+    }
+
+    protected static void printAllPeople(String[] dataOfPeople) {
+        System.out.println("=== List of people ===");
+        for (String dataOfPerson : dataOfPeople) {
+            System.out.println(dataOfPerson);
         }
     }
 }
