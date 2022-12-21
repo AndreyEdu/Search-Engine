@@ -1,21 +1,37 @@
 package search;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import static java.lang.System.exit;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Enter the number of people:");
 
-        Scanner scanner = new Scanner(System.in);
-        int numberOfPeople = Integer.parseInt(scanner.nextLine());
-        String[] dataOfPeople = new String[numberOfPeople];
+        File file = new File(args[1]);
+        String[] dataOfPeopleMax = new String[100];
+        int length = 0;
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNext()) {
+                dataOfPeopleMax[length] = scanner.nextLine();
+                length++;
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("No file found: " + args[1]);
+            exit(0);
+        }
+
+        String[] dataOfPeople = new String[length];
+
+        for (int i = 0 ; i < length; i++) {
+            dataOfPeople[i] = dataOfPeopleMax[i];
+        }
+
         boolean run = true;
 
-        System.out.println("Enter all people:");
-
-        for (int i = 0; i < numberOfPeople; i++) {
-            dataOfPeople[i] = scanner.nextLine();
-        }
+        Scanner scanner = new Scanner(System.in);
 
         do {
             System.out.println("""
