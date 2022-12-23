@@ -2,7 +2,7 @@ package search;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.util.*;
 
 import static java.lang.System.exit;
 
@@ -10,23 +10,16 @@ public class Main {
     public static void main(String[] args) {
 
         File file = new File(args[1]);
-        String[] dataOfPeopleMax = new String[100];
-        int length = 0;
+
+        ArrayList<String> dataOfPeople = new ArrayList<>();
 
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNext()) {
-                dataOfPeopleMax[length] = scanner.nextLine();
-                length++;
+                dataOfPeople.add(scanner.nextLine());
             }
         } catch (FileNotFoundException e) {
             System.out.println("No file found: " + args[1]);
             exit(0);
-        }
-
-        String[] dataOfPeople = new String[length];
-
-        for (int i = 0 ; i < length; i++) {
-            dataOfPeople[i] = dataOfPeopleMax[i];
         }
 
         boolean run = true;
@@ -62,21 +55,32 @@ public class Main {
         } while (run);
     }
 
-    protected static void searchPeople(String searchData, String[] dataOfPeople) {
-        int noMatch = 0;
-        for (String dataOfPerson : dataOfPeople) {
-            if (dataOfPerson.toLowerCase().contains(searchData.toLowerCase())) {
-                System.out.println(dataOfPerson);
-                noMatch++;
+    protected static void searchPeople(String searchData, ArrayList<String> dataOfPeople) {
+        HashMap<String, TreeSet<Integer>> invertedIndex = new HashMap<>();
+        int line = 0;
+        for (String data : dataOfPeople) {
+            String[] words = data.split("\\s+");
+            for (String word : words) {
+                if (invertedIndex.containsKey(word)) {
+                    invertedIndex.get(word).add(line);
+                } else {
+                    invertedIndex.put(word, new TreeSet<>(Set.of(line)));
+                }
             }
+            line++;
         }
 
-        if (noMatch == 0) {
+        if (invertedIndex.containsKey(searchData)) {
+            for (Integer val : invertedIndex.get(searchData)) {
+                System.out.println(invertedIndex.get(searchData).size() + " persons found:");
+                System.out.println(dataOfPeople.get(val));
+            }
+        } else {
             System.out.println("No matching people found.");
         }
     }
 
-    protected static void printAllPeople(String[] dataOfPeople) {
+    protected static void printAllPeople(ArrayList<String> dataOfPeople) {
         System.out.println("=== List of people ===");
         for (String dataOfPerson : dataOfPeople) {
             System.out.println(dataOfPerson);
